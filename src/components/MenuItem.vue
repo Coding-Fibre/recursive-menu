@@ -1,34 +1,33 @@
 <template>
-  <div class="menu-item" :class="{ opened: expanded }">
-    <div
+  <div class="menu-item" :class="{ expanded: expanded }">
+    <div 
       class="label"
       @click="toggleMenu()"
-      :style="{ paddingLeft: depth * 20 + 20 + 'px' }"
+      :style="{
+        paddingLeft: depth * 20 + 20 + 'px'
+      }"
     >
       <div class="left">
-        <i v-if="icon" class="material-icons-outlined">{{ icon }}</i>
-        <span v-if="showLabel">{{ label }}</span>
+        <i v-if="icon" class="material-icons">{{ icon }}</i>
+        <span>{{ label }}</span>
       </div>
       <div v-if="data" class="right">
-        <i class="expand material-icons" :class="{ opened: expanded }">expand_more</i>
+        <i class="material-icons expand" :class="{ expanded: expanded }">expand_more</i>
       </div>
     </div>
-    <div
+    <div 
       v-show="showChildren"
-      :class="{ 'small-menu': smallMenu }"
       class="items-container"
-      :style="{ height: containerHeight }"
       ref="container"
+      :style="{ height: containerHeight }"
     >
       <menu-item
-        :class="{ opened: showChildren }"
         v-for="(item, index) in data"
         :key="index"
-        :data="item.children"
         :label="item.label"
         :icon="item.icon"
         :depth="depth + 1"
-        :smallMenu="smallMenu"
+        :data="item.children"
       />
     </div>
   </div>
@@ -40,57 +39,56 @@ export default {
   data: () => ({
     showChildren: false,
     expanded: false,
-    containerHeight: 0,
+    containerHeight: 0
   }),
   props: {
-    data: {
-      type: Array,
-    },
     label: {
       type: String,
+      required: true
     },
     icon: {
-      type: String,
+      type: String
     },
     depth: {
       type: Number,
+      required: true
     },
-    smallMenu: {
-      type: Boolean,
-    },
-  },
-  computed: {
-    showLabel() {
-      return this.smallMenu ? this.depth > 0 : true;
+    data: {
+      type: Array
     }
   },
   methods: {
     toggleMenu() {
       this.expanded = !this.expanded;
-      if (!this.showChildren) {
+      // If the menu item is closed
+      if(!this.showChildren) {
         this.showChildren = true;
         this.$nextTick(() => {
+          // We get the height of what's inside the container to start the animation
           this.containerHeight = this.$refs["container"].scrollHeight + "px";
           setTimeout(() => {
             this.containerHeight = "fit-content";
-            if(navigator.userAgent.indexOf("Firefox") != -1) 
-              this.containerHeight = "-moz-max-content"
+            // We set the overflow of the container to visible at the end of the
+            // animation
             this.$refs["container"].style.overflow = "visible";
-          }, 300);
-        });
+          }, 300) // Duration of the animation
+        })
       } else {
         this.containerHeight = this.$refs["container"].scrollHeight + "px";
+        // We set the overflow of the container to hidden to avoid text overlapping
+        // during the animation
         this.$refs["container"].style.overflow = "hidden";
+        // This trick allows us to play the animation when the CSS is all well set
         setTimeout(() => {
           this.containerHeight = 0 + "px";
-        }, 10);
+        }, 10)
         setTimeout(() => {
           this.showChildren = false;
-        }, 300);
+        }, 300) // Duration of the animation
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -107,9 +105,8 @@ export default {
     height: 50px;
     padding: 0 20px;
     box-sizing: border-box;
-    font-size: 14px;
     color: #6a6a6a;
-    transition: all 0.3s ease;
+    transition: all .3s ease;
     > div {
       display: flex;
       align-items: center;
@@ -118,39 +115,24 @@ export default {
     i {
       font-size: 20px;
       color: #6e6e6e;
-      transition: all 0.3s ease;
+      transition: all .3s ease;
       &.expand {
         font-size: 16px;
         color: #cacaca;
-        &.opened {
+        &.expanded {
           transform: rotate(180deg);
         }
       }
     }
-    &.small-item {
-      width: fit-content;
-    }
     &:hover {
-      background: #deedff;
+      background-color: #deedff;
       cursor: pointer;
     }
   }
   .items-container {
     width: 100%;
-    left: calc(100% + 6px);
-    transition: height 0.3s ease;
     overflow: hidden;
-    &.small-menu {
-      width: fit-content;
-      position: absolute;
-      background: #fff;
-      box-shadow: 0 0 10px #ebebeb;
-      top: 0;
-      .label {
-        width: 100% !important;
-        padding-left: 20px !important;
-      }
-    }
+    transition: height .3s ease;
   }
 }
 </style>

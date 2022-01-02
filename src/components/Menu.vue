@@ -1,25 +1,22 @@
 <template>
-  <div class="menu" :class="{ 'small-menu': smallMenu }">
+  <div class="menu">
     <MenuItem
       v-for="(item, index) in menuTree"
       :key="index"
-      :data="item.children"
       :label="item.label"
       :icon="item.icon"
       :depth="0"
-      :smallMenu="smallMenu"
+      :data="item.children"
     />
-    <i @click="smallMenu = !smallMenu" class="material-icons">menu</i>
   </div>
 </template>
 
 <script>
-import MenuItem from './MenuItem.vue';
+import MenuItem from './MenuItem.vue'
 
 export default {
-  name: 'recursive-menu',
+  name: "recursive-menu",
   data: () => ({
-    smallMenu: false,
     menuTree: [
       {
         label: "Home",
@@ -39,7 +36,7 @@ export default {
             ]
           },
           {
-            label: "level 1.2"
+            label: "level 1.2",
           }
         ]
       },
@@ -48,14 +45,14 @@ export default {
         icon: "dashboard",
         children: [
           {
-            label: "level 2.1",
+            label: "level 2.1"
           },
           {
             label: "level 2.2"
           },
           {
             label: "level 2.3"
-          }
+          },
         ]
       },
       {
@@ -80,22 +77,5 @@ export default {
   border-right: 1px solid #ececec;
   transition: all .3s ease;
   overflow: auto;
-  i {
-    position: fixed;
-    left: 250px;
-    font-size: 20px;
-    top: 15px;
-    user-select: none;
-    cursor: pointer;
-    transition: all .3s ease;
-  }
-  &.small-menu {
-    overflow: inherit;
-    width: 60px;
-    padding-top: 50px;
-    i {
-      left: 20px;
-    }
-  }
 }
 </style>
