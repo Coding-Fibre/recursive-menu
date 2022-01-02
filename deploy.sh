@@ -14,6 +14,6 @@ git add -A
 git commit -m 'Deployment'
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:loicmonard/recursive-menu.git master:gh-pages
+git push -f git@github.com:Coding-Fibre/recursive-menu.git master:gh-pages
 
 cd -
